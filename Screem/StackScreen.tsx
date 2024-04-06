@@ -1,13 +1,36 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Button } from 'react-native';
 
 const StackScreen = () => {
+  const [token, setToken] = useState('');
+
+  const retrieveToken = async () => {
+    try {
+      const storedToken = await AsyncStorage.getItem('token');
+      const prueba = await AsyncStorage.getItem('prueba');
+      console.log('prueba encontrado:', prueba);
+
+      if (storedToken !== null) {
+        console.log('Token encontrado:', storedToken);
+        console.log('prueba encontrado 2:', prueba);
+
+        // Aquí puedes realizar cualquier otra acción que necesites con el token, como enviarlo a un servidor o almacenarlo en otro lugar.
+      } else {
+        console.log('No se encontró ningún token almacenado.');
+      }
+    } catch (error) {
+      console.log('Error al recuperar el token:', error);
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>¡Hola, mundo!</Text>
+      <Button title="Ver Token" onPress={retrieveToken} />
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +45,6 @@ const styles = StyleSheet.create({
 });
 
 export default StackScreen;
-
 /*
 import React from 'react';
 import { useForm } from 'react-hook-form';

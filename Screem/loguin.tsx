@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, Text, TextInput, Alert, Pressable  } from 'react-native';
 import { LoginForm } from '../types/loginform';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Loguin: React.FC = () => {
-  const [showSuccess, setShowSuccess] = useState(false);
+    const [token, setToken] = useState('');
+
   const [formData, setFormData] = useState<LoginForm>({
     email: '',
     password: '',
@@ -17,6 +19,7 @@ const Loguin: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("hola")
     // Aquí puedes mostrar una alerta de confirmación para que los usuarios revisen su información antes de enviarla
     Alert.alert(
       'Confirmación',
@@ -26,6 +29,8 @@ const Loguin: React.FC = () => {
         { text: 'Enviar', onPress: () => sendRequest() },
       ]
     );
+
+
   };
 
   const sendRequest = async () => {
@@ -43,11 +48,10 @@ const Loguin: React.FC = () => {
         const responseData = await response.json();
 
         console.log('Autenticación exitosa:', responseData);
-        setShowSuccess(true);
+        await AsyncStorage.setItem('prueba', 'este es un texto de prueba');
 
-        setTimeout(() => {
-          setShowSuccess(false);
-        }, 3000);
+        await AsyncStorage.setItem('token', responseData.token);
+
       } else {
         Alert.alert('Error', 'Error en la autenticación');
         console.error('Error en la autenticación:', response.statusText);
@@ -72,8 +76,9 @@ const Loguin: React.FC = () => {
         value={formData.password}
         secureTextEntry
       />
-      <Button title="Iniciar Sesión" onPress={handleSubmit} />
-
+<Pressable onPress={handleSubmit}>
+  <Text>Envio de datos</Text>
+</Pressable>
       {/* Aquí puedes mostrar la información ingresada antes de enviarla */}
       <View style={{ marginTop: 20 }}>
         <Text>Información ingresada:</Text>
@@ -83,5 +88,7 @@ const Loguin: React.FC = () => {
     </View>
   );
 };
-
+//Button is deprecated. Please use Pressable
+//TouchableOpacity is deprecated. Please use Pressable
+//focusable is deprecated.
 export default Loguin;
