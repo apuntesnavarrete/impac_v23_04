@@ -207,7 +207,7 @@ const JugadoresScreen: React.FC = () => {
     // Aquí puedes mostrar una alerta de confirmación para que los usuarios revisen su información antes de enviarla
     Alert.alert(
       'Confirmación',
-      `Nombre: ${formData.name}\nEmail: ${formData.Email}\nCurp: ${formData.Curp}`,
+      `Nombre: ${formData.name}`,
       [
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Enviar', onPress: () => sendRequest() },

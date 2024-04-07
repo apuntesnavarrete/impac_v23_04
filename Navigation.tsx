@@ -3,6 +3,7 @@ import HomeScreen from './Screem/HomeScreens';
 import StackScreen from './Screem/StackScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import Loguin from './Screem/loguin';
+import Pruebas from './Screem/Pruebas';
 
 const Tab = createBottomTabNavigator();
 
@@ -12,6 +13,7 @@ function MyTabs() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Settings" component={StackScreen} />
       <Tab.Screen name="Loguin" component={Loguin} />
+      <Tab.Screen name="Pruebas" component={Pruebas} />
 
     </Tab.Navigator>
   );
