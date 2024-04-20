@@ -5,6 +5,6 @@ export interface Jugadorestype {
     createdAt: string;
     updatedAt: string;
     Email: string ;
-    Photo: string;
+    Photo: string | null ;
     Curp: string
   }

@@ -180,6 +180,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Alert, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Jugadorestype } from '../types/jugadores';
+import ImagePicker from 'react-native-image-picker';
 
 
 
@@ -204,6 +205,8 @@ const JugadoresScreen: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("data")
+    sendRequest()
     // Aquí puedes mostrar una alerta de confirmación para que los usuarios revisen su información antes de enviarla
     Alert.alert(
       'Confirmación',
@@ -215,16 +218,17 @@ const JugadoresScreen: React.FC = () => {
     );
   };
 
+  
   const sendRequest = async () => {
-    const storedToken = await AsyncStorage.getItem('token');
-    console.log(storedToken);
+  //  const storedToken = await AsyncStorage.getItem('token');
+   // console.log(storedToken);
     console.log(formData)
 
     try {
-      const response = await fetch('http://18.188.110.39:83/api/v1/participants', {
+      const response = await fetch('http://localhost:4000/api/v1/participants', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${storedToken}`,
+         /* 'Authorization': `Bearer ${storedToken}`,*/
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
@@ -254,6 +258,8 @@ const JugadoresScreen: React.FC = () => {
         value={formData.name}
       />
     
+   
+
       <Pressable onPress={handleSubmit}>
         <Text>Enviar Datos</Text>
       </Pressable>
@@ -261,8 +267,7 @@ const JugadoresScreen: React.FC = () => {
       <View style={{ marginTop: 20 }}>
         <Text>Información ingresada:</Text>
         <Text>Nombre: {formData.name}</Text>
-        <Text>Email: {formData.Email}</Text>
-        <Text>CURP: {formData.Curp}</Text>
+        
       </View>
     </View>
   );
