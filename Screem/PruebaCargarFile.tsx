@@ -36,14 +36,16 @@ const styles = StyleSheet.create({
 
 export default PruebaCargaFile; */
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Image, View, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
+import ViewShot from 'react-native-view-shot';
 
 
 export default function PruebaCargaFile() {
   const [image, setImage] = useState(null);
+  const viewShotRef = useRef(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -98,12 +100,43 @@ export default function PruebaCargaFile() {
   }
 };
 
+const capturar = async () => {
+  try {
+    const uri = await viewShotRef.current.capture();
+
+    // Guardar la captura de pantalla en la galería
+    const asset = await MediaLibrary.createAssetAsync(uri);
+  
+    try {
+      const album = await MediaLibrary.getAlbumAsync('YourAlbumName');
+      
+      if (album) {
+        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+      } else {
+        await MediaLibrary.createAlbumAsync('YourAlbumName', asset, false);
+      }
+
+      alert('Captura de pantalla guardada en la galería!');
+    } catch (error) {
+      console.error('Error guardando la captura de pantalla:', error);
+      alert('Ocurrió un error al guardar la captura de pantalla.');
+    }
+
+  } catch (error) {
+    console.error("Error al capturar la pantalla:", error);
+  }
+};
+
   return (
     <View style={styles.container}>
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       <Button title="Take a photo" onPress={takePhoto} />
+      <Button title="Capturar pantalla" onPress={capturar} />
+
       {image && (
         <View style={styles.imageContainer}>
+        <ViewShot ref={viewShotRef}>
+
           <Image source={{ uri: image }} style={styles.image} />
           <View style={styles.overlay}>
             <Image 
@@ -111,7 +144,9 @@ export default function PruebaCargaFile() {
               style={styles.overlayImage} 
               resizeMode="cover"
             />
+            <p style={styles.overlayText}>Liga Estrellas ED</p>
           </View>
+          </ViewShot>
         </View>
       )}
     </View>
@@ -133,15 +168,21 @@ const styles = StyleSheet.create({
   },
   overlay: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    
+    left: 15,
+    bottom: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   overlayImage: {
-    width: 130,  // Ajusta el tamaño de la imagen overlay según tus necesidades
-    height: 130, // Ajusta el tamaño de la imagen overlay según tus necesidades
+    width: 30,  // Ajusta el tamaño de la imagen overlay según tus necesidades
+    height: 50, // Ajusta el tamaño de la imagen overlay según tus necesidades
   },
+  overlayText:{
+    position: 'absolute',
+
+    left: 40,
+    bottom: 5,
+    fontSize:10,
+  }
 });

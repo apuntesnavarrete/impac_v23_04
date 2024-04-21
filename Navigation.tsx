@@ -15,7 +15,7 @@ function MyTabs() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Settings" component={StackScreen} />
       <Tab.Screen name="Loguin" component={Loguin} />
-      <Tab.Screen name="Pruebas" component={CapturaComponente} />
+      <Tab.Screen name="Pruebas" component={PruebaCargaFile} />
 
     </Tab.Navigator>
   );
