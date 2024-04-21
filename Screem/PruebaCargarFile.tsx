@@ -39,12 +39,13 @@ export default PruebaCargaFile; */
 import { useState } from 'react';
 import { Button, Image, View, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
 
-export default function ImagePickerExample() {
+
+export default function PruebaCargaFile() {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: false,
@@ -52,17 +53,67 @@ export default function ImagePickerExample() {
       quality: 1,
     });
 
+    handleImage(result);
+  };
+
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    handleImage(result);
+  };
+
+  const handleImage = (result) => {
     console.log(result);
 
-    if (!result.canceled) {
+    if (!result.cancelled) {
       setImage(result.assets[0].uri);
     }
   };
 
+  const saveToGallery = async () => {
+  if (!image) {
+    return;
+  }
+
+  const asset = await MediaLibrary.createAssetAsync(image);
+  
+  try {
+    const album = await MediaLibrary.getAlbumAsync('YourAlbumName');
+    
+    if (album) {
+      await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+    } else {
+      await MediaLibrary.createAlbumAsync('YourAlbumName', asset, false);
+    }
+
+    alert('Image saved to gallery!');
+  } catch (error) {
+    console.error('Error saving image:', error);
+    alert('An error occurred while saving the image.');
+  }
+};
+
   return (
     <View style={styles.container}>
       <Button title="Pick an image from camera roll" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={styles.image} />}
+      <Button title="Take a photo" onPress={takePhoto} />
+      {image && (
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: image }} style={styles.image} />
+          <View style={styles.overlay}>
+            <Image 
+              source={require('./ligaed.png')} 
+              style={styles.overlayImage} 
+              resizeMode="cover"
+            />
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -73,8 +124,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  imageContainer: {
+    position: 'relative',
+  },
   image: {
-    width: 200,
-    height: 200,
+    width: 192,
+    height: 192,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  overlayImage: {
+    width: 130,  // Ajusta el tamaño de la imagen overlay según tus necesidades
+    height: 130, // Ajusta el tamaño de la imagen overlay según tus necesidades
   },
 });
