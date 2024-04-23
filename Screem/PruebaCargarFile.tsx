@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 export default PruebaCargaFile; */
 
 import { useRef, useState } from 'react';
-import { Button, Image, View, StyleSheet } from 'react-native';
+import { Button, Image, View, StyleSheet , Text} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import ViewShot from 'react-native-view-shot';
@@ -46,6 +46,14 @@ import ViewShot from 'react-native-view-shot';
 export default function PruebaCargaFile() {
   const [image, setImage] = useState(null);
   const viewShotRef = useRef(null);
+
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+  // ...rest of the code remains same
+
+  if (status === null) {
+    requestPermission();
+  }
+
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -144,7 +152,9 @@ const capturar = async () => {
               style={styles.overlayImage} 
               resizeMode="cover"
             />
-            <p style={styles.overlayText}>Liga Estrellas ED</p>
+                  <Text style={styles.overlayText}>Liga Estrellas ED</Text>
+
+           
           </View>
           </ViewShot>
         </View>
