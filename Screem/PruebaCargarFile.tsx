@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 export default PruebaCargaFile; */
 
 import { useRef, useState } from 'react';
-import { Button, Image, View, StyleSheet , Text} from 'react-native';
+import { Button, Image, View, StyleSheet , Text, ScrollView} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import ViewShot from 'react-native-view-shot';
@@ -137,6 +137,8 @@ const capturar = async () => {
 
   return (
     <View style={styles.container}>
+            <ScrollView>
+
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       <Button title="Take a photo" onPress={takePhoto} />
       <Button title="Capturar pantalla" onPress={capturar} />
@@ -147,18 +149,29 @@ const capturar = async () => {
 
           <Image source={{ uri: image }} style={styles.image} />
           <View style={styles.overlay}>
-            <Image 
-              source={require('./ligaed.png')} 
-              style={styles.overlayImage} 
-              resizeMode="cover"
-            />
-                  <Text style={styles.overlayText}>Liga Estrellas ED</Text>
 
-           
-          </View>
+            <View style={styles.overlayTop}>
+            <Text style={styles.overlayTopText}>Mixta Sabatina</Text>
+  <Text style={styles.overlayTopText}>24-marzo-24</Text>
+              
+            </View>
+
+            <View style={styles.overlayBottom}>
+              <Image 
+                source={require('./ligaed.png')} 
+                style={[styles.overlayImage]} 
+                resizeMode="cover"
+              />
+              <Text style={styles.overlayTopText}>Destacados</Text>
+              <Text style={styles.overlayTopText}>Liga ED</Text>
+             
+            </View>
+            
+        </View>
           </ViewShot>
         </View>
       )}
+        </ScrollView>
     </View>
   );
 }
@@ -171,28 +184,50 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: 'relative',
+
   },
   image: {
-    width: 192,
-    height: 192,
+    width: 300,
+    height: 450,
   },
   overlay: {
+    width: '100%',
+    height: '100%',
     position: 'absolute',
+    padding: 20,
+    justifyContent: 'space-between',
+   
+    borderWidth: 1,       // Ancho del borde
+    borderColor: 'black',
     
-    left: 15,
-    bottom: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    
+  },
+  overlayTop:{
+    fontWeight: 'bold', // Establecer peso de la fuente
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Fondo con opacidad
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10, // Redondear las esquinas de la imagen
+  },
+  overlayTopText: {
+    fontWeight: 'bold',
+    fontSize: 15, // Tamaño de fuente
+    color: '#FFFFFF', // Color de fuente
+    textShadowColor: 'rgba(0, 0, 0, 0.75)', // Sombra de texto
+    textShadowOffset: { width: 1, height: 1 }, // Desplazamiento de la sombra
+    textShadowRadius: 4, // Radio de la sombra
+    
+  },
+  overlayBottom:{
+    
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
   },
   overlayImage: {
-    width: 30,  // Ajusta el tamaño de la imagen overlay según tus necesidades
-    height: 50, // Ajusta el tamaño de la imagen overlay según tus necesidades
+    width: 70,  // Ajusta el tamaño de la imagen overlay según tus necesidades
+    height: 95, // Ajusta el tamaño de la imagen overlay según tus necesidades
   },
-  overlayText:{
-    position: 'absolute',
-
-    left: 40,
-    bottom: 5,
-    fontSize:10,
-  }
 });
