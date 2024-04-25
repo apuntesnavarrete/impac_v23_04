@@ -12,6 +12,7 @@ export default function PruebaCargaFile() {
   const [image, setImage] = useState(null);
   const viewShotRef = useRef(null);
   const [selectedOptionCategoria, setSelectedOptionCategoria] = useState('Mixta Sabatina');
+  const [selectedLigaOption, setSelectedLigaOption] = useState('ED');
 
   const [status, requestPermission] = MediaLibrary.usePermissions();
   // ...rest of the code remains same
@@ -119,7 +120,22 @@ const currentDate = getCurrentDate();
         <Picker.Item label="Mixta Sabatina" value="Mixta Sabatina" />
         <Picker.Item label="Libre Sabatina" value="Libre Sabatina" />
         <Picker.Item label="Sub21" value="Sub21" />
+        <Picker.Item label="Libre Golden" value="Libre Golden" />
+        <Picker.Item label="Libre Platino" value="Libre Platino" />
+        <Picker.Item label="Mixta" value="Mixta" />
+        <Picker.Item label="Femenil" value="Femenil" />
+        <Picker.Item label="Sub20" value="Sub20" />
       </Picker>
+
+      <Picker
+        selectedValue={selectedLigaOption}
+        onValueChange={(itemValue, itemIndex) => setSelectedLigaOption(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="ED" value="ED" />
+        <Picker.Item label="Pro Champions" value="Pro Champions" />
+      </Picker>
+
       {image && (
         <View style={styles.imageContainer}>
         <ViewShot ref={viewShotRef}>
@@ -134,14 +150,22 @@ const currentDate = getCurrentDate();
             </View>
 
             <View style={styles.overlayBottom}>
-              <Image 
-                source={require('./ligaed.png')} 
-                style={[styles.overlayImage]} 
-                resizeMode="cover"
-              />
+            {selectedLigaOption === 'ED' ? (
+            <Image 
+              source={require('./ligaed.png')} 
+              style={[styles.overlayImage]} 
+              resizeMode="contain"
+            />
+          ) : selectedLigaOption === 'Pro Champions' ? (
+            <Image 
+              source={require('./pro.png')} 
+              style={[styles.overlayImage]} 
+              resizeMode="contain"
+            />
+          ) : null}
                <View style={styles.overlayBotton}>
                <Text style={styles.overlayTopText}>Jugadores Destacados</Text>
-               <Text style={styles.overlayTopText}>-Liga ED-</Text>
+               <Text style={styles.overlayTopText}>-Liga {selectedLigaOption}-</Text>
 
                </View>
               
@@ -217,6 +241,7 @@ const styles = StyleSheet.create({
   overlayImage: {
     width: 70,  // Ajusta el tamaño de la imagen overlay según tus necesidades
     height: 95, // Ajusta el tamaño de la imagen overlay según tus necesidades
+    resizeMode: 'contain',
   },
   picker: {
     height: 50,
