@@ -1,51 +1,17 @@
-/*
-import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
-import { launchImageLibrary} from 'react-native-image-picker';
-
-const PruebaCargaFile = () => {
-
-  const handlePress = async () => {
-
-    let options = {
-      mediaType: 'photo', // Specify 'photo' to pick only images
-      storageOptions: {
-        path: 'images',   // Optional: Specify a custom storage path (Android only)
-      },
-    };
-
-   const result = await launchImageLibrary(options, response=>{
-      console.log(result)
-    })
-  };
-
-  return (
-    <View style={styles.container}>
-      <Button title="Presionar" onPress={handlePress} />
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-
-export default PruebaCargaFile; */
 
 import { useRef, useState } from 'react';
 import { Button, Image, View, StyleSheet , Text, ScrollView} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import ViewShot from 'react-native-view-shot';
+import { getCurrentDate } from '../util/dateUtil';
+import { Picker } from '@react-native-picker/picker';
 
 
 export default function PruebaCargaFile() {
   const [image, setImage] = useState(null);
   const viewShotRef = useRef(null);
+  const [selectedOptionCategoria, setSelectedOptionCategoria] = useState('Mixta Sabatina');
 
   const [status, requestPermission] = MediaLibrary.usePermissions();
   // ...rest of the code remains same
@@ -135,6 +101,9 @@ const capturar = async () => {
   }
 };
 
+const currentDate = getCurrentDate();
+
+
   return (
     <View style={styles.container}>
             <ScrollView>
@@ -142,7 +111,15 @@ const capturar = async () => {
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       <Button title="Take a photo" onPress={takePhoto} />
       <Button title="Capturar pantalla" onPress={capturar} />
-
+      <Picker
+        selectedValue={selectedOptionCategoria}
+        onValueChange={(itemValue, itemIndex) => setSelectedOptionCategoria(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="Mixta Sabatina" value="Mixta Sabatina" />
+        <Picker.Item label="Libre Sabatina" value="Libre Sabatina" />
+        <Picker.Item label="Sub21" value="Sub21" />
+      </Picker>
       {image && (
         <View style={styles.imageContainer}>
         <ViewShot ref={viewShotRef}>
@@ -151,8 +128,8 @@ const capturar = async () => {
           <View style={styles.overlay}>
 
             <View style={styles.overlayTop}>
-            <Text style={styles.overlayTopText}>Mixta Sabatina</Text>
-  <Text style={styles.overlayTopText}>24-marzo-24</Text>
+            <Text style={styles.overlayTopText}>{selectedOptionCategoria}</Text>
+            <Text style={styles.overlayTopText}>{currentDate}</Text>
               
             </View>
 
@@ -162,8 +139,12 @@ const capturar = async () => {
                 style={[styles.overlayImage]} 
                 resizeMode="cover"
               />
-              <Text style={styles.overlayTopText}>Destacados</Text>
-              <Text style={styles.overlayTopText}>Liga ED</Text>
+               <View style={styles.overlayBotton}>
+               <Text style={styles.overlayTopText}>Jugadores Destacados</Text>
+               <Text style={styles.overlayTopText}>-Liga ED-</Text>
+
+               </View>
+              
              
             </View>
             
@@ -211,6 +192,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10, // Redondear las esquinas de la imagen
   },
+  overlayBotton:{
+  
+    backgroundColor: 'rgba(0, 0, 0, 0.1)', // Fondo con opacidad
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10, // Redondear las esquinas de la imagen
+  },
   overlayTopText: {
     fontWeight: 'bold',
     fontSize: 15, // Tamaño de fuente
@@ -218,7 +206,7 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.75)', // Sombra de texto
     textShadowOffset: { width: 1, height: 1 }, // Desplazamiento de la sombra
     textShadowRadius: 4, // Radio de la sombra
-    
+    textAlign:'center'
   },
   overlayBottom:{
     
@@ -229,5 +217,14 @@ const styles = StyleSheet.create({
   overlayImage: {
     width: 70,  // Ajusta el tamaño de la imagen overlay según tus necesidades
     height: 95, // Ajusta el tamaño de la imagen overlay según tus necesidades
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+    marginBottom: 20,
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 5,
   },
 });
